@@ -25,9 +25,12 @@
     <input type='radio' id='maritalStatus2' name='maritalStatus' value='Married'>
     <label for='maritalStatus1'>Married</label><br>
     <input type='radio' id='maritalStatus3' name='maritalStatus' value='Widowed'>
-    <label for='maritalStatus1'>Widowed</label><br><br>
+    <label for='maritalStatus1'>Widowed</label><br>
     <p>How many people mooch off ya'?</p>
-    
+    <input type="number" min="0" required onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input>
+    <p>Please enter your gross income (aka, your income <i>BEFORE</i> you pay taxes)</p>
+    <input type="text" id="grossIncome"><br><br>
+    <input type="submit" id="formSubmit" value="Submit">
   </form>
   
 </body>
