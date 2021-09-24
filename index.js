@@ -21,7 +21,7 @@ function taxCalculation(grossIncome) {
     taxSum += (grossIncome > ceilingOfBracket ? maxAmount : grossIncome - floorOfBracket) * taxRate;
   }
 
-  for (let i = 0; i < taxRates.length - 1; i += 1) {
+  for (let i = 0; i < taxRates.length; i += 1) {
     if (grossIncome >= taxBrackets[i]) {
       calculateTaxForBracket(taxBrackets[i + 1], taxBrackets[i], taxRates[i]);
     }
