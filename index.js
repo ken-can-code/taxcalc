@@ -12,8 +12,8 @@ let stateRules = {
 };
 
 function taxCalculation(grossIncome) {
-  // We'll assume grossIncome is $20000
-  
+  const taxBrackets = [0, 8809, 20883, 32960, 45753, 57824, 295373, 354445, 590742, 1000000, Infinity];
+  const taxRates = [.01, .02, .04, .06, .08, .093, .103, .113, .123, .133];
   let taxSum = 0;
   
   function calculateTaxForBracket(ceilingOfBracket, floorOfBracket, taxRate) {
@@ -21,16 +21,10 @@ function taxCalculation(grossIncome) {
     taxSum += (grossIncome > ceilingOfBracket ? maxAmount : grossIncome - floorOfBracket) * taxRate;
   }
 
-  if (grossIncome >= 0) {
-    calculateTaxForBracket(8808.99, 0, .01);
-  }
-
-  if (grossIncome >= 8809) {
-    calculateTaxForBracket(20882.99, 8809, .02);
-  }
-
-  if (grossIncome >= 20883) {
-    calculateTaxForBracket(32960, 20883, .04);
+  for (let i = 0; i < taxRates.length - 1; i += 1) {
+    if (grossIncome >= taxBrackets[i]) {
+      calculateTaxForBracket(taxBrackets[i + 1], taxBrackets[i], taxRates[i]);
+    }
   }
 
   return taxSum.toFixed(2);
@@ -56,25 +50,6 @@ function handleSubmit(event) {
   numberOfDependents = document.getElementById('dependents').value;
   grossIncome = document.getElementById('grossIncome').value;
   state = document.getElementById('states').value;
-  console.log('grossIncome', grossIncome);
-// let bracket;
-//   // ${enteredIncome} * stateRules.${enteredState}.${bracket}
-//   if (grossIncome > stateRules.state.bracket1) {
-//     if (grossIncome > stateRules.state.bracket2) {
-//       if (grossIncome > stateRules.state.bracket3) {
-//         bracket = 'bracket4';
-//       } else {
-//         bracket = 'bracket3';
-//       }
-//     } else {
-//       bracket = 'bracket2';
-//     }
-//   } else {
-//     bracket = 'bracket1';
-//   }
-  // const displayAmount = grossIncome * stateRules.state.bracket
-  // const displaySection = document.getElementById('displayTaxAmount');
-  // displaySection.textContent = displayAmount;
   resultsDisplay();
 }
 
@@ -83,9 +58,9 @@ function resultsDisplay() {
   `<p>State: ${state}</p>
    <p>Marital Status: ${userSelectedMaritalStatus}</p>
    <p>Dependents: ${numberOfDependents}</p>
-   <p>Gross Income: ${taxCalculation(grossIncome)}</p><br>
+   <p>Gross Income: ${grossIncome}</p><br>
    
-   <p>Based on the info you've given us, your state income taxes will be: $50000</p>
+   <p>Based on the info you've given us, your state income taxes will be: ${taxCalculation(grossIncome)}</p>
   `)
 }
 submitButton.addEventListener('click', handleSubmit);
