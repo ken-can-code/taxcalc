@@ -1,12 +1,50 @@
 let stateRules = {
   California: {
     Married: {
-      taxBracket: [],
-      taxRates: [],
+      taxBrackets: [0,
+        17618,
+        41766,
+        65920,
+        91506,
+        115648,
+        590746,
+        708890,
+        1000000,
+        1181484,
+        Infinity],
+      taxRates: [.01,
+        .02,
+        .04,
+        .06,
+        .08,
+        .093,
+        .103,
+        .113,
+        .123,
+        .133],
     },
     Single: {
-      taxBracket: [],
-      taxRates: [],
+      taxBrackets: [0,
+        8809,
+        20883,
+        32960,
+        45753,
+        57824,
+        295373,
+        354445,
+        590742,
+        1000000,
+        Infinity],
+      taxRates: [.01,
+        .02,
+        .04,
+        .06,
+        .08,
+        .093,
+        .103,
+        .113,
+        .123,
+        .133],
     },
   },
   
@@ -22,17 +60,13 @@ function taxCalculation(grossIncome) {
     const maxAmount = ceilingOfBracket - floorOfBracket;
     taxSum += (grossIncome > ceilingOfBracket ? maxAmount : grossIncome - floorOfBracket) * taxRate;
   }
-
-  if (grossIncome >= 0) {
-    calculateTaxForBracket(8808.99, 0, .01);
-  }
-
-  if (grossIncome >= 8809) {
-    calculateTaxForBracket(20882.99, 8809, .02);
-  }
-
-  if (grossIncome >= 20883) {
-    calculateTaxForBracket(32960, 20883, .04);
+  const stateAndMaritalStatus = stateRules[state][userSelectedMaritalStatus];
+  for (let i = 0; grossIncome > stateAndMaritalStatus.taxBrackets[i]; i += 1) {
+    calculateTaxForBracket(stateAndMaritalStatus.taxBrackets[i + 1],
+      stateAndMaritalStatus.taxBrackets[i],
+      stateAndMaritalStatus.taxRates[i]);
+      // console.log('SAMS', stateAndMaritalStatus.taxBrackets[i + 1], stateAndMaritalStatus.taxBrackets[i]);
+      // console.log('taxRates', stateAndMaritalStatus.taxRates[i]);
   }
 
   return taxSum.toFixed(2);
