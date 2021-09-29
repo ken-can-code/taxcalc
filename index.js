@@ -5,6 +5,14 @@ function taxCalculation(grossIncome) {
     const maxAmount = ceilingOfBracket - floorOfBracket;
     taxSum += (grossIncome > ceilingOfBracket ? maxAmount : grossIncome - floorOfBracket) * taxRate;
   }
+
+  async function getStateTax(url) {
+    const stateTaxInfoObj = await fetch(url);
+    const parsedData = await stateTaxInfoObj.json();
+    return parsedData;
+  }
+
+  const stateTaxInfo = getStateTax('https://data.ftb.ca.gov/resource/hqma-83bw.json');
   const stateAndMaritalStatus = stateTaxInfo[state][userSelectedMaritalStatus];
   for (let i = 0; grossIncome > stateAndMaritalStatus.taxBrackets[i]; i += 1) {
     calculateTaxForBracket(stateAndMaritalStatus.taxBrackets[i + 1],
@@ -52,3 +60,4 @@ function resultsDisplay() {
 }
 
 submitButton.addEventListener('click', handleSubmit);
+
