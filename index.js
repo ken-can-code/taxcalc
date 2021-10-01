@@ -1,3 +1,18 @@
+const results = document.getElementById('results');
+const maritalStatus = document.getElementsByName('maritalStatus');
+const submitButton = document.getElementById('formSubmit');
+
+let userSelectedMaritalStatus;
+let numberOfDependents;
+let grossIncome;
+let state;
+let taxYear = document.getElementById('taxYear');
+const currentYear = Date().slice(11, 15);
+for (let i = 1; i < taxYear.children.length; i += 1) {
+  taxYear.children[i].innerHTML = currentYear - i - 1;
+  taxYear.children[i].value = currentYear - i - 1;
+}
+
 function taxCalculation(grossIncome) {
   let taxSum = 0;
   
@@ -28,15 +43,6 @@ function taxCalculation(grossIncome) {
   return 1234.56;
 }
 
-const results = document.getElementById('results');
-const maritalStatus = document.getElementsByName('maritalStatus');
-const submitButton = document.getElementById('formSubmit');
-
-let userSelectedMaritalStatus;
-let numberOfDependents;
-let grossIncome;
-let state;
-let taxYear;
 function handleSubmit(event) {
   event.preventDefault();
   for (let i = 0; i < maritalStatus.length; i += 1) {
@@ -66,7 +72,7 @@ function resultsDisplay() {
   results.innerHTML = (
   `<p>Based on the info you've given us, your state
   income taxes will be: $${taxDisplay}</p><br>
-   <p>Tax Year: ${year}</p>
+   <p>Tax Year: ${taxYear}</p>
    <p>Gross Income: ${grossIncome}</p>
    <p>State: ${state}</p>
    <p>Marital Status: ${userSelectedMaritalStatus}</p>
