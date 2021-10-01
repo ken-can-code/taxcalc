@@ -12,7 +12,7 @@ function taxCalculation(grossIncome) {
     return parsedData;
   }
 
-  const stateTaxInfo = getStateTax(`https://data.ftb.ca.gov/resource/hqma-83bw.json?taxable_year=${year}&filing_status=${userSelectedMaritalStatus}`);
+  const stateTaxInfo = getStateTax(`https://data.ftb.ca.gov/resource/hqma-83bw.json?taxable_year=${taxYear}&filing_status=${userSelectedMaritalStatus}`);
   console.log('stateTaxInfo', stateTaxInfo);
   // const stateAndMaritalStatus = stateTaxInfo[state][userSelectedMaritalStatus];
   // for (let i = 0; grossIncome > stateAndMaritalStatus.taxBrackets[i]; i += 1) {
@@ -36,7 +36,7 @@ let userSelectedMaritalStatus;
 let numberOfDependents;
 let grossIncome;
 let state;
-let year;
+let taxYear;
 function handleSubmit(event) {
   event.preventDefault();
   for (let i = 0; i < maritalStatus.length; i += 1) {
@@ -52,7 +52,7 @@ function handleSubmit(event) {
   numberOfDependents = document.getElementById('dependents').value;
   grossIncome = document.getElementById('grossIncome').value;
   state = document.getElementById('states').value;
-  year = document.getElementById('taxYear').value;
+  taxYear = document.getElementById('taxYear').value;
   resultsDisplay();
 }
 
