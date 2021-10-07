@@ -29,22 +29,13 @@ function handleSubmit(event) {
 async function getStateTax(url) {
   const stateTaxInfoObj = await fetch(url);
   const parsedData = await stateTaxInfoObj.json();
-  console.log('parsed data', parsedData);
   return parsedData;
 }
 
 async function taxCalculation(grossIncome) {
   let taxSum = 0;
-  
-  function calculateTaxForBracket(ceilingOfBracket, floorOfBracket, taxRate) {
-    const maxAmount = ceilingOfBracket - floorOfBracket;
-    taxSum += (grossIncome > ceilingOfBracket ? maxAmount : grossIncome - floorOfBracket) * taxRate;
-  }
 
   const stateTaxInfo = await getStateTax(`https://data.ftb.ca.gov/resource/hqma-83bw.json?taxable_year=${taxYear}&filing_status=${userSelectedMaritalStatus}`);
-  console.log('stateTaxInfo', stateTaxInfo); // an array of objects
-  // "taxable_income" -> parse out ending number
-  // "tax_rate_percentage" -> use this number to calculate tax
 
   function parseTaxBracket(taxBracketStr) {
     let startIdx;
@@ -52,6 +43,7 @@ async function taxCalculation(grossIncome) {
       const char = taxBracketStr[i];
       if (char === ' ') {
         startIdx = i + 1;
+        break;
       }
     }
     let numStr = '';
@@ -61,26 +53,37 @@ async function taxCalculation(grossIncome) {
         numStr += char;
       }
     }
+
     return +numStr;
+  }
+
+  let ceilingOfPreviousBracket = 0;
+
+  function calculateTaxForBracket(ceilingOfBracket, floorOfBracket, taxRate) {
+    const maxAmount = ceilingOfBracket - floorOfBracket;
+    taxSum += (grossIncome > ceilingOfBracket ? maxAmount : grossIncome - floorOfBracket) * (taxRate / 10000);
   }
 
   for (let i = 0; i < stateTaxInfo.length - 1; i += 1) {
     const eachBracketObj = stateTaxInfo[i];
     const taxBracketCeiling = parseTaxBracket(eachBracketObj.taxable_income);
-    console.log('taxBracketNumber Working!', typeof taxBracketCeiling, taxBracketCeiling);
+    calculateTaxForBracket(
+      taxBracketCeiling,
+      ceilingOfPreviousBracket,
+      eachBracketObj.tax_rate_percentage
+    );
+    if (grossIncome < taxBracketCeiling) {
+      break;
+    }
+    ceilingOfPreviousBracket = taxBracketCeiling;
   }
-
-  // return taxSum.toFixed(2);
-  // return stateTaxInfo;
-  // return 1234.56;
+  return taxSum.toFixed(2);
 }
 
-function resultsDisplay() {
-  const taxDisplay = taxCalculation(grossIncome);
-  console.log('tax display', taxDisplay);
+async function resultsDisplay() {
+  const taxDisplay = await taxCalculation(grossIncome);
   if (userSelectedMaritalStatus === 'Married Filing Jointly') {
     userSelectedMaritalStatus = 'Married';
-    console.log('working up to here');
   }
   results.innerHTML = (
   `<p>Based on the info you've given us, your state
