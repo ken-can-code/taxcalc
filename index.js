@@ -11,7 +11,9 @@ let taxYear = document.getElementById('taxYear'); // result is an array of blank
   const taxData = await fetch('https://data.ftb.ca.gov/resource/hqma-83bw.json');
   const parsedTaxData = await taxData.json();
   const latestYear = parsedTaxData[0].taxable_year;
-  for (let i = 1; i < taxYear.children.length; i += 1) {
+  for (let i = 1; i < 40; i += 1) { // change # of loops to support n most recent years
+    const option = document.createElement('option');
+    taxYear.appendChild(option);
     taxYear.children[i].innerHTML = latestYear - i + 1;
     taxYear.children[i].value = latestYear - i + 1;
   }
