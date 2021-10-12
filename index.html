@@ -16,9 +16,9 @@
     
     <select id='taxYear'>
       <option>Click here to select a year</option>
-      <option value='2019'>2019</option>
-      <option value='2018'>2018</option>
-      <option value='2017'>2017</option>
+      <option />
+      <option />
+      <option />
     </select>
     <br>
     <br>
@@ -32,14 +32,16 @@
       <option value='Texas'>Texas</option>
     </select>
     <p>Please select your marital status</p>
-    <input type='radio' id='maritalStatus1' name='maritalStatus' value='Single'>
-    <label for='maritalStatus1'>Single</label><br>
-    <input type='radio' id='maritalStatus2' name='maritalStatus' value='Married'>
-    <label for='maritalStatus2'>Married</label><br>
-    <input type='radio' id='maritalStatus3' name='maritalStatus' value='Widowed'>
-    <label for='maritalStatus3'>Widowed</label><br>
-    <p>How many people depend on ya'?</p>
-    <input type="number" id='dependents' min="0" required onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input>
+    <input type='radio' id='maritalStatus1' name='maritalStatus' value='Head Of Household'>
+    <label for='maritalStatus1'>Head Of Household</label><br>
+    <input type='radio' id='maritalStatus2' name='maritalStatus' value='Single'>
+    <label for='maritalStatus2'>Single</label><br>
+    <input type='radio' id='maritalStatus3' name='maritalStatus' value='Married'>
+    <label for='maritalStatus3'>Married</label><br>
+    <input type='radio' id='maritalStatus4' name='maritalStatus' value='Surviving Spouse'>
+    <label for='maritalStatus4'>Surviving Spouse</label><br>
+    <!-- <p>How many dependents do you have?</p>
+    <input type="number" id='dependents' min="0" required onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input> -->
     <p>Please enter your gross income (aka, your income <i>BEFORE</i> you pay taxes)</p>
     <input type="text" id="grossIncome"><br><br>
     <input type="submit" id="formSubmit" value="Submit">

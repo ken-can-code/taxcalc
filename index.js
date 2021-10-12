@@ -3,15 +3,19 @@ const maritalStatus = document.getElementsByName('maritalStatus');
 const submitButton = document.getElementById('formSubmit');
 
 let userSelectedMaritalStatus;
-let numberOfDependents;
-let grossIncome;
 let state;
+let grossIncome;
 let taxYear = document.getElementById('taxYear');
-const currentYear = Date().slice(11, 15);
-for (let i = 1; i < taxYear.children.length; i += 1) {
-  taxYear.children[i].innerHTML = currentYear - i - 1;
-  taxYear.children[i].value = currentYear - i - 1;
-}
+
+(async function getLatestYear() {
+  const taxData = await fetch('https://data.ftb.ca.gov/resource/hqma-83bw.json');
+  const parsedTaxData = await taxData.json();
+  const latestYear = parsedTaxData[0].taxable_year;
+  for (let i = 1; i < taxYear.children.length; i += 1) {
+    taxYear.children[i].innerHTML = latestYear - i + 1;
+    taxYear.children[i].value = latestYear - i + 1;
+  }
+})();
 
 function handleSubmit(event) {
   event.preventDefault();
@@ -25,7 +29,6 @@ function handleSubmit(event) {
     }
   }
 
-  numberOfDependents = document.getElementById('dependents').value;
   grossIncome = document.getElementById('grossIncome').value;
   state = document.getElementById('states').value;
   taxYear = document.getElementById('taxYear').value;
@@ -83,8 +86,6 @@ function taxCalculation(grossIncome) {
     });
     for (let i = 0; grossIncome > taxBrackets[i]; i += 1) {
       calculateTaxForBracket(taxBrackets[i + 1], taxBrackets[i], taxRates[i]);
-        console.log('taxBrackets', taxBrackets[i + 1], taxBrackets[i]);
-        console.log('taxRates', taxRates[i]);
     }
 
     resultsDisplay(taxSum.toFixed(2));
@@ -93,10 +94,8 @@ function taxCalculation(grossIncome) {
 }
 
 async function resultsDisplay(taxDisplay) {
-  console.log('amount to pay', taxDisplay);
   if (userSelectedMaritalStatus === 'Married Filing Jointly') {
     userSelectedMaritalStatus = 'Married';
-    console.log('working up to here');
   }
   results.innerHTML = (
   `<p>Based on the info you've given us, your state
@@ -104,10 +103,8 @@ async function resultsDisplay(taxDisplay) {
    <p>Tax Year: ${taxYear}</p>
    <p>Gross Income: ${grossIncome}</p>
    <p>State: ${state}</p>
-   <p>Marital Status: ${userSelectedMaritalStatus}</p>
-   <p>Dependents: ${numberOfDependents}</p>`
+   <p>Marital Status: ${userSelectedMaritalStatus}</p>`
   );
 }
 
 submitButton.addEventListener('click', handleSubmit);
-
