@@ -5,7 +5,7 @@ const submitButton = document.getElementById('formSubmit');
 let userSelectedMaritalStatus;
 let state;
 let grossIncome;
-let taxYear = document.getElementById('taxYear');
+let taxYear = document.getElementById('taxYear'); // result is an array of blank after 0
 
 (async function getLatestYear() {
   const taxData = await fetch('https://data.ftb.ca.gov/resource/hqma-83bw.json');
@@ -15,7 +15,7 @@ let taxYear = document.getElementById('taxYear');
     taxYear.children[i].innerHTML = latestYear - i + 1;
     taxYear.children[i].value = latestYear - i + 1;
   }
-})();
+})(); // self invoking function
 
 function handleSubmit(event) {
   event.preventDefault();
